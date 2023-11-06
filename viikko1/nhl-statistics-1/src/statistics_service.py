@@ -1,8 +1,20 @@
 from player_reader import PlayerReader
+from enum import Enum
+
+class SortBy(Enum):
+    POINTS = 1
+    GOALS = 2
+    ASSISTS = 3
 
 
 def sort_by_points(player):
     return player.points
+
+def sort_by_goals(player):
+    return player.goals
+
+def sort_by_assists(player):
+    return player.assists
 
 
 class StatisticsService:
@@ -25,11 +37,16 @@ class StatisticsService:
 
         return list(players_of_team)
 
-    def top(self, how_many):
+    def top(self, how_many, criteria = SortBy.POINTS):
+        sort_key = None
+        match criteria:
+            case SortBy.POINTS:     sort_key = sort_by_points
+            case SortBy.GOALS:      sort_key = sort_by_points
+            case SortBy.ASSISTS:    sort_key = sort_by_points
         sorted_players = sorted(
             self._players,
             reverse=True,
-            key=sort_by_points
+            key=sort_key
         )
 
         result = []
