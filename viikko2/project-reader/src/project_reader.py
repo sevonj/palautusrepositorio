@@ -12,12 +12,21 @@ class ProjectReader:
         content = request.urlopen(self._url).read().decode("utf-8")
 
         tomli = toml.loads(content)
-        
+        print(tomli)
         name = tomli['tool']['poetry']['name']
         desc = tomli['tool']['poetry']['description']
+        lisens = tomli['tool']['poetry']['license']
+        authors = tomli['tool']['poetry']['authors']
         deps = tomli['tool']['poetry']['dependencies']
         devdeps = tomli['tool']['poetry']['group']['dev']['dependencies']
 
 
         # deserialisoi TOML-formaatissa oleva merkkijono ja muodosta Project-olio sen tietojen perusteella
-        return Project(name, desc, deps, devdeps)
+        return Project(
+            name,
+            desc,
+            lisens,
+            authors,
+            deps,
+            devdeps
+            )
