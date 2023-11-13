@@ -7,7 +7,7 @@ class Player:
         self.penalties = dict['penalties']
         self.team = dict['team']
         self.games = dict['games']
-    
+   
     def __str__(self):
         return " ".join([
             self.name,
