@@ -10,13 +10,11 @@ class Player:
    
     def __str__(self):
         return " ".join([
-            self.name,
-            self.nationality,
-            str(self.assists),
-            str(self.goals),
-            str(self.penalties),
-            self.team,
-            str(self.games),
+            f"{self.name:22}",
+            f"{self.team:4}",
+            f"{self.goals:2} +",
+            f"{self.assists:2} =",
+            f"{self.points:3}",
         ])
     
     @property

@@ -18,6 +18,7 @@ def main():
 
     print_nationality(players, 'FIN')
 
+
 def print_nationality(players, nationality):
 
     sorted_players = sorted(
@@ -28,13 +29,8 @@ def print_nationality(players, nationality):
 
     print(f"Players from {nationality}:")
     for player in sorted_players:
-        print(
-            f"{player.name:22}",
-            f"{player.team:4}",
-            f"{player.goals:2} +",
-            f"{player.assists:2} =",
-            f"{player.points:3}",
-        )
+        print(player)
+
 
 def sort_by_points(player):
     return player.points
