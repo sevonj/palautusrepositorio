@@ -18,3 +18,8 @@ class Player:
             self.team,
             str(self.games),
         ])
+    
+    @property
+    def points(self):
+        return self.goals + self.assists
+    
