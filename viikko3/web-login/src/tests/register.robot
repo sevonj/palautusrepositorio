@@ -1,3 +1,4 @@
+# Vinkki: voit halutessasi toteuttaa login_resource.robot-tiedoston
 *** Settings ***
 Resource  resource.robot
 Library  ../AppLibrary.py
@@ -35,6 +36,33 @@ Register With Nonmatching Password And Password Confirmation
     Submit Credentials
     Register Should Fail With Message  Passwords do not match
 
+Login After Successful Registration
+    Set Username  kalle
+    Set Password  kalle456
+    Set Password Confirm  kalle456
+    Submit Credentials
+    Register Should Succeed
+    Go To Main Page
+    Click Button  Logout
+    Go To Login Page
+    Set Username  kalle
+    Set Password  kalle456
+    Click Button  Login
+    Main Page Should Be Open
+
+Login After Failed Registration
+    Set Username  kalle
+    Set Password  kalle456
+    Set Password Confirm  kalle457
+    Submit Credentials
+    Register Should Fail With Message  Passwords do not match
+    
+    Go To Login Page
+    Set Username  kalle
+    Set Password  kalle456
+    Click Button  Login
+    Login Should Fail With Message  Invalid username or password
+
 *** Keywords ***
 Setup Register
     Reset Application
@@ -47,6 +75,11 @@ Register Should Succeed
 Register Should Fail With Message
     [Arguments]  ${message}
     Register Page Should Be Open
+    Page Should Contain  ${message}
+
+Login Should Fail With Message
+    [Arguments]  ${message}
+    Login Page Should Be Open
     Page Should Contain  ${message}
 
 Submit Credentials

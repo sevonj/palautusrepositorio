@@ -7,6 +7,7 @@ ${SERVER}  localhost:5001
 ${DELAY}  0 seconds
 ${HOME_URL}  http://${SERVER}
 ${LOGIN_URL}  http://${SERVER}/login
+${MAIN_URL}  http://${SERVER}/ohtu
 ${REGISTER_URL}  http://${SERVER}/register
 
 *** Keywords ***
@@ -34,6 +35,9 @@ Go To Login Page
 
 Go To Register Page
     Go To  ${REGISTER_URL}
+
+Go To Main Page
+    Go To  ${MAIN_URL}
 
 Go To Starting Page
     Go To  ${HOME_URL}
