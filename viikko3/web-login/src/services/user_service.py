@@ -30,6 +30,26 @@ class UserService:
     def create_user(self, username, password, password_confirmation):
         self.validate(username, password, password_confirmation)
 
+        if not username.isalpha():
+            raise UserInputError("Username should only contain letters a-z")
+
+        if len(username) < 3:
+            raise UserInputError("Username length should be at least 3.")
+        
+        if self._user_repository.find_by_username(username) != None:
+            raise UserInputError("Username is already taken.")
+        
+        if len(password) < 8:
+            raise UserInputError("Password length should be at least 8.")
+
+        if password.isalpha():
+            raise UserInputError("Password should contain characters different from a-z")
+
+        if password != password_confirmation:
+            raise UserInputError("Passwords do not match")
+        
+        
+
         user = self._user_repository.create(
             User(username, password)
         )
