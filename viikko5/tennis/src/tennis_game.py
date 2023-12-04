@@ -1,55 +1,60 @@
 class TennisGame:
-    def __init__(self, player1_name, player2_name):
-        self.player1_name = player1_name
-        self.player2_name = player2_name
-        self.m_score1 = 0
-        self.m_score2 = 0
+    def __init__(self, p1_name, p2_name):
+        self.p1_name = p1_name
+        self.p2_name = p2_name
+        self.p1_score = 0
+        self.p2_score = 0
 
-    def won_point(self, player_name):
-        if player_name == "player1":
-            self.m_score1 = self.m_score1 + 1
-        else:
-            self.m_score2 = self.m_score2 + 1
+    def won_point(self, p_name):
+        match p_name:
+            case self.p1_name:
+                self.p1_score += 1
+            case self.p2_name:
+                self.p2_score += 1
+            case _:
+                raise ValueError(f"{p_name} not a player!")
 
     def get_score(self):
-        score = ""
-        temp_score = 0
 
-        if self.m_score1 == self.m_score2:
-            if self.m_score1 == 0:
-                score = "Love-All"
-            elif self.m_score1 == 1:
-                score = "Fifteen-All"
-            elif self.m_score1 == 2:
-                score = "Thirty-All"
+        # Even
+        if self.p1_score == self.p2_score:
+            if self.p1_score >= 3:
+                return "Deuce"
             else:
-                score = "Deuce"
-        elif self.m_score1 >= 4 or self.m_score2 >= 4:
-            minus_result = self.m_score1 - self. m_score2
+                return f"{get_scorename(self.p1_score)}-All"
 
-            if minus_result == 1:
-                score = "Advantage player1"
-            elif minus_result == -1:
-                score = "Advantage player2"
-            elif minus_result >= 2:
-                score = "Win for player1"
+        # Advantage
+        elif max(self.p1_score, self.p2_score) >= 4:
+            score_diff = abs(self.p1_score - self.p2_score)
+            top_player: str
+            if self.p1_score > self.p2_score:
+                top_player = "player1"
             else:
-                score = "Win for player2"
+                top_player = "player2"
+
+            match score_diff:
+                case 1:
+                    return f"Advantage {top_player}"
+                case _: # Score difference is larger than 1
+                    return f"Win for {top_player}"
+
+        # Normal
         else:
-            for i in range(1, 3):
-                if i == 1:
-                    temp_score = self.m_score1
-                else:
-                    score = score + "-"
-                    temp_score = self.m_score2
+            p1_str = get_scorename(self.p1_score)
+            p2_str = get_scorename(self.p2_score)
+            return f"{p1_str}-{p2_str}"
 
-                if temp_score == 0:
-                    score = score + "Love"
-                elif temp_score == 1:
-                    score = score + "Fifteen"
-                elif temp_score == 2:
-                    score = score + "Thirty"
-                elif temp_score == 3:
-                    score = score + "Forty"
 
-        return score
+
+def get_scorename(score: int) -> str:
+    match score:
+        case 0:
+            return "Love"
+        case 1:
+            return "Fifteen"
+        case 2:
+            return "Thirty"
+        case 3:
+            return "Forty"
+        case _:
+            raise ValueError("Score is outside expected range!")
