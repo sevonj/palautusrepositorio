@@ -13,18 +13,29 @@ class Summa:
     def __init__(self, sovellus, syöte):
         self._sovellus = sovellus
         self._syöte = syöte
+        self._arvo: int
 
     def suorita(self):
-        self._sovellus.plus(int(self._syöte()))
+        self._arvo = int(self._syöte())
+        self._sovellus.plus(self._arvo)
+
+    def kumoa(self):
+        self._sovellus.plus(-self._arvo)
 
 
 class Erotus:
     def __init__(self, sovellus, syöte):
         self._sovellus = sovellus
         self._syöte = syöte
+        self._arvo: int
+
 
     def suorita(self):
-        self._sovellus.plus(-int(self._syöte()))
+        self._arvo = int(self._syöte())
+        self._sovellus.plus(-self._arvo)
+
+    def kumoa(self):
+        self._sovellus.plus(self._arvo)
 
 
 class Nollaus:
@@ -38,8 +49,7 @@ class Nollaus:
 
 class Kumoa:
     def __init__(self, sovellus, syöte):
-        self._sovellus = sovellus
-        self._syöte = syöte
+        pass
 
     def suorita(self):
         pass
@@ -49,6 +59,7 @@ class Kayttoliittyma:
     def __init__(self, sovellus, root):
         self._sovellus = sovellus
         self._root = root
+        self._history = []
 
         self.kaynnista()
 
@@ -103,16 +114,26 @@ class Kayttoliittyma:
         self._kumoa_painike.grid(row=2, column=3)
 
     def _suorita_komento(self, komento):
-        komentofunktio = self._komennot[komento]
-        try:
-            komentofunktio.suorita()
-        except ValueError:
-            print("Invalid input")
-            return
+        koolio = self._komennot[komento]
 
-        self._kumoa_painike["state"] = constants.NORMAL
+        if komento is Komento.KUMOA:
+            self._history.pop().kumoa()
+            if len(self._history) == 0:
+                self._kumoa_painike["state"] = constants.DISABLED
+
+        else:
+            try:
+                koolio.suorita()
+                self._history.append(koolio)
+                self._kumoa_painike["state"] = constants.NORMAL
+
+            except ValueError:
+                print("Invalid input")
+                return
+
         self._nollaus_painike["state"] = constants.NORMAL
         if komento is Komento.NOLLAUS:
+            self._history.clear()
             self._nollaus_painike["state"] = constants.DISABLED
             self._kumoa_painike["state"] = constants.DISABLED
 
