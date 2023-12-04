@@ -1,24 +1,49 @@
+KAPASITEETTI = 5
+OLETUSKASVATUS = 5
+
 
 class IntJoukko:
-    def __init__(self, _kapasiteetti=None, _kasvatuskoko=None):
-        self._set = set()
+    def __init__(self, _kapasiteetti=KAPASITEETTI, _kasvatuskoko=OLETUSKASVATUS):
+        self._kasvatuskoko = _kasvatuskoko
+        self._kapasiteetti = _kapasiteetti
+        self._size = 0
+        self._list = self._luo_lista(self._kapasiteetti)
+
+    def _luo_lista(self, koko) -> list:
+        return [0] * koko
 
     def kuuluu(self, n: int) -> bool:
         return n in self
 
     def lisaa(self, n: int):
-        if n not in self:
-            self._set.add(n)
+        if n in self:
+            return
+
+        if self._size == self._kapasiteetti:
+            self._kapasiteetti += self._kasvatuskoko
+            old = self._list
+            self._list = self._luo_lista(self._kapasiteetti)
+            for i, m in enumerate(old):
+                self._list[i] = m
+
+        self._list[self._size] = n
+        self._size += 1
 
     def poista(self, n: int):
-        if n in self:
-            self._set.remove(n)
+        if n not in self:
+            return
+
+        self._size -= 1
+        idx = self._list.index(n)
+
+        for i in range(idx, self._size):
+            self._list[i] = self._list[i + 1]
 
     def mahtavuus(self):
-        return len(self._set)
+        return self._size
 
     def to_int_list(self):
-        return list(self._set)
+        return self._list[: self._size]
 
     @staticmethod
     def yhdiste(a, b):
@@ -46,8 +71,8 @@ class IntJoukko:
         return result
 
     def __str__(self):
-        # Example result: "{0, 1, 52}"
+        # Example output: "{0, 1, 52}"
         return "{" + ", ".join(str(n) for n in self) + "}"
 
     def __iter__(self):
-        return self._set.__iter__()
+        return self._list[: self._size].__iter__()
