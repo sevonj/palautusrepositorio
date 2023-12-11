@@ -86,3 +86,6 @@ class QueryBuilder:
 
     def has_fewer_than(self, val, attr):
         return QueryBuilder(And(self._matcher, HasFewerThan(val, attr)))
+
+    def incl_or(self, *matchers):
+        return QueryBuilder(Or(*matchers))
