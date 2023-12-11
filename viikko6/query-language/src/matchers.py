@@ -9,6 +9,7 @@ class And:
 
         return True
 
+
 class Or:
     def __init__(self, *matchers):
         self._matchers = matchers
@@ -63,3 +64,25 @@ class HasFewerThan:
     def test(self, player):
         player_value = getattr(player, self._attr)
         return not player_value >= self._value
+
+
+class Query:
+    def __init__(self) -> None:
+        self._matchers = [All()]
+
+
+class QueryBuilder:
+    def __init__(self, matcher=All()) -> None:
+        self._matcher = matcher
+
+    def query(self):
+        return self._matcher
+
+    def plays_in(self, team):
+        return QueryBuilder(And(self._matcher, PlaysIn(team)))
+
+    def has_at_least(self, val, attr):
+        return QueryBuilder(And(self._matcher, HasAtLeast(val, attr)))
+
+    def has_fewer_than(self, val, attr):
+        return QueryBuilder(And(self._matcher, HasFewerThan(val, attr)))
